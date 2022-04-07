@@ -70,7 +70,7 @@ namespace CommentInserter {
                 const RewriteBuffer *RewriteBuf =
                     rewriter.getRewriteBufferFor(getCompilerInstance().getSourceManager().getMainFileID());
                 ofstream instrFile;
-                instrFile.open("instrumentedFile.cpp");
+                instrFile.open("instrumentedExample.cpp");
                 instrFile << std::string(RewriteBuf->begin(), RewriteBuf->end());
                 instrFile.close();
             }

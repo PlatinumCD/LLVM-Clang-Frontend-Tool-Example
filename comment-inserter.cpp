@@ -1,5 +1,6 @@
 // Clang Headers
 #include "clang/AST/RecursiveASTVisitor.h"
+#include "clang/AST/Type.h"
 #include "clang/Frontend/CompilerInstance.h"
 #include "clang/Rewrite/Core/Rewriter.h"
 #include "clang/Tooling/CommonOptionsParser.h"
@@ -36,7 +37,19 @@ namespace CommentInserter {
                     string funcName = declName.getAsString();
                     SourceLocation location = decl->getSourceRange().getBegin();
                     stringstream caption;
-                    caption << "// Start function " << funcName << "\n";
+                    caption << "/*\n\t" << funcName;
+
+                    if (decl->getNumParams() > 0) {
+                       caption << "\n\t\tParameters:"; 
+                    }
+
+                    for (unsigned i = 0; i < decl->getNumParams(); i++) {
+                        ParmVarDecl* parmDecl = decl->getParamDecl(i);
+                        string parmDeclName = parmDecl->getNameAsString();
+                        string parmDeclType = parmDecl->getType().getAsString(); 
+                        caption << "\n\t\t\t" <<  parmDeclName << " (" << parmDeclType << ")";
+                    }
+                    caption << "\n*/\n";
                     rewriter.InsertTextBefore(location, caption.str());
                 }
                 return true;

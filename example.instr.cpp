@@ -3,17 +3,29 @@
 
 using namespace std;
 
-// Start function multiply
+/*
+	multiply
+		Parameters:
+			a (int)
+			b (int)
+*/
 int multiply(int a, int b) {
     return a * b;
 }
 
-// Start function concat
+/*
+	concat
+		Parameters:
+			x (std::string)
+			y (std::string)
+*/
 string concat(string x, string y) {
     return x + y;
 }
 
-// Start function main
+/*
+	main
+*/
 int main() {
     int a = 2, b = 3;
     int c = multiply(a, b);

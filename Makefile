@@ -1,5 +1,4 @@
 TARGET := comment-inserter
-HEADERS := -isystem /llvm/include/
 WARNINGS := -Wall -Wextra -pedantic -Wno-unused-parameter -fvisibility=hidden
 CXX := clang++
 

@@ -57,6 +57,7 @@ namespace CommentInserter {
                 }
                 return true;
             }
+
         private:
             Rewriter &rewriter;
      };

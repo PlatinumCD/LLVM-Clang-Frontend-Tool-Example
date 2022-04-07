@@ -25,11 +25,8 @@ LIBS := $(CLANG_LIBS) `llvm-config --cxxflags --ldflags --libs --system-libs`
 
 all: comment-inserter
 
-.phony: clean
-.phony: run
-
 clean:
-	rm $(TARGET) || echo -n ""
+	rm $(TARGET) 
 
 comment-inserter: $(TARGET).cpp
 	$(CXX) $(WARNINGS) $(TARGET).cpp $(LIBS) -o $(TARGET)

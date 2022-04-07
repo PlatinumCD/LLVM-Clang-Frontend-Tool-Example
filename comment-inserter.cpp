@@ -49,7 +49,10 @@ namespace CommentInserter {
                         string parmDeclType = parmDecl->getType().getAsString(); 
                         caption << "\n\t\t\t" <<  parmDeclName << " (" << parmDeclType << ")";
                     }
-                    caption << "\n*/\n";
+                    
+                    string funcDeclReturnType = decl->getReturnType().getAsString();
+                    caption << "\n\t\tReturns:\n\t\t\t" << funcDeclReturnType << "\n*/\n";
+
                     rewriter.InsertTextBefore(location, caption.str());
                 }
                 return true;

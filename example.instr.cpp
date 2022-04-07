@@ -8,6 +8,8 @@ using namespace std;
 		Parameters:
 			a (int)
 			b (int)
+		Returns:
+			int
 */
 int multiply(int a, int b) {
     return a * b;
@@ -18,6 +20,8 @@ int multiply(int a, int b) {
 		Parameters:
 			x (std::string)
 			y (std::string)
+		Returns:
+			std::string
 */
 string concat(string x, string y) {
     return x + y;
@@ -25,6 +29,8 @@ string concat(string x, string y) {
 
 /*
 	main
+		Returns:
+			int
 */
 int main() {
     int a = 2, b = 3;

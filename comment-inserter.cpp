@@ -13,6 +13,8 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include <iostream>
+#include <filesystem>
 
 // Namespaces
 using namespace std;
@@ -61,7 +63,8 @@ namespace CommentInserter {
     /*   Frontend Action    */
     class Action : public ASTFrontendAction {
         public:
-            unique_ptr<ASTConsumer> CreateASTConsumer(CompilerInstance& Compiler, StringRef) override {
+            unique_ptr<ASTConsumer> CreateASTConsumer(CompilerInstance& Compiler, StringRef inFile) override {
+                fileName = inFile.str();
                 rewriter.setSourceMgr(Compiler.getSourceManager(), Compiler.getLangOpts());
                 return make_unique<Consumer>(rewriter);
             }
@@ -69,13 +72,21 @@ namespace CommentInserter {
             void EndSourceFileAction() override {
                 const RewriteBuffer *RewriteBuf =
                     rewriter.getRewriteBufferFor(getCompilerInstance().getSourceManager().getMainFileID());
+                    
+                __fs::filesystem::path filePath(fileName);
+                string originalFileName = filePath.stem().string();
+                string originalFileExt = filePath.extension().string();
+                stringstream instrFileName;
+                instrFileName << originalFileName << ".instr" << originalFileExt;
+                
                 ofstream instrFile;
-                instrFile.open("instrumentedExample.cpp");
-                instrFile << std::string(RewriteBuf->begin(), RewriteBuf->end());
+                instrFile.open(instrFileName.str());
+                instrFile << string(RewriteBuf->begin(), RewriteBuf->end());
                 instrFile.close();
             }
 
         private:
+            string fileName;
             Rewriter rewriter;
     };
 }
@@ -83,13 +94,20 @@ namespace CommentInserter {
 
 int main(int argc, const char* argv[]) {
   
-  cl::OptionCategory ToolCategory("Comment Inserter");
-  Expected<CommonOptionsParser> OptionsParser = CommonOptionsParser::create(argc, argv, ToolCategory);
-  ClangTool Tool(OptionsParser->getCompilations(),
-                 OptionsParser->getSourcePathList());
+    cl::OptionCategory ToolCategory("Comment Inserter");
+    Expected<CommonOptionsParser> OptionsParser = CommonOptionsParser::create(argc, argv, ToolCategory);
+    ClangTool Tool(OptionsParser->getCompilations(),
+                   OptionsParser->getSourcePathList());
 
-  auto action = newFrontendActionFactory<CommentInserter::Action>();
-  Tool.run(action.get());
+    if (argc > 2) {
+        cout << "Only takes 1 argument" << endl;
+        exit(1);
+    }
+    const vector< string > sourceList = OptionsParser->getSourcePathList();
+    string fileName = sourceList[0];
 
-  return 0;
+    auto action = newFrontendActionFactory<CommentInserter::Action>();
+    Tool.run(action.get());
+
+    return 0;
 }

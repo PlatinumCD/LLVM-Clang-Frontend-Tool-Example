@@ -1,0 +1,20 @@
+ssh delphi.nic.uoregon.edu
+
+module load gcc/7.3
+module load cmake/3.15
+
+git clone https://github.com/spack/spack.git
+add spack/bin to PATH
+
+spack install llvm@13.0.1 -shared_libs %gcc@7.3.0
+
+git clone https://github.com/PlatinumCD/LLVM-Clang-Frontend-Tool-Example.git
+cd LLVM-Clang-Frontend-Tool-Example
+
+mkdir build
+cd build
+cmake ..
+make
+
+./mini-instrumentor ../example.c
+cat example.instr.c
